@@ -77,6 +77,12 @@ int TrainManager::addTrain(const std::string& trainID, int stationNum, int seatN
     trains[trainCount].type = type;
     trains[trainCount].isReleased = false;
 
+    // Allocate arrays dynamically
+    trains[trainCount].stations = new std::string[stationNum];
+    trains[trainCount].prices = new int[stationNum - 1];
+    trains[trainCount].travelTimes = new int[stationNum - 1];
+    trains[trainCount].stopoverTimes = new int[stationNum - 2];
+
     for (int i = 0; i < stationNum; i++) {
         trains[trainCount].stations[i] = stations[i];
     }
@@ -115,6 +121,8 @@ std::string TrainManager::queryTrain(const std::string& trainID, const std::stri
     if (index == -1) return "-1";
 
     Train& train = trains[index];
+    if (!train.stations) return "-1"; // Check if arrays are allocated
+
     std::string result = trainID + " " + train.type + "\n";
 
     int queryMonth = StringUtil::parseInt(date.substr(0, 2));
@@ -229,7 +237,7 @@ bool TrainManager::isTrainReleased(const std::string& trainID) {
 
 int TrainManager::getStationIndex(const std::string& trainID, const std::string& station) {
     int index = findTrain(trainID);
-    if (index == -1) return -1;
+    if (index == -1 || !trains[index].stations) return -1;
 
     for (int i = 0; i < trains[index].stationNum; i++) {
         if (trains[index].stations[i] == station) {
@@ -246,7 +254,7 @@ int TrainManager::getSeatNum(const std::string& trainID) {
 
 int TrainManager::getPrice(const std::string& trainID, int fromIndex, int toIndex) {
     int index = findTrain(trainID);
-    if (index == -1) return 0;
+    if (index == -1 || !trains[index].prices) return 0;
 
     int price = 0;
     for (int i = fromIndex; i < toIndex; i++) {

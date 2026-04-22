@@ -18,8 +18,8 @@ struct User {
 
 class UserManager {
 private:
-    static const int MAX_USERS = 10000;
-    static const int HASH_SIZE = 20011;
+    static const int MAX_USERS = 5000;
+    static const int HASH_SIZE = 10007;
 
     User* users;
     int userCount;

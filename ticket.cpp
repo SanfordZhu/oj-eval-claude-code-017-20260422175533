@@ -7,32 +7,11 @@
 TicketManager::TicketManager() : orderCount(0), waitlistCount(0), currentTimestamp(0) {
     orders = new Order[MAX_ORDERS];
     waitlist = new Order[MAX_WAITLIST];
-
-    // Allocate seat availability array dynamically
-    seatAvailability = new int**[1000];
-    for (int i = 0; i < 1000; i++) {
-        seatAvailability[i] = new int*[100];
-        for (int j = 0; j < 100; j++) {
-            seatAvailability[i][j] = new int[366];
-            for (int k = 0; k < 366; k++) {
-                seatAvailability[i][j][k] = -1;
-            }
-        }
-    }
 }
 
 TicketManager::~TicketManager() {
     delete[] orders;
     delete[] waitlist;
-
-    // Deallocate seat availability array
-    for (int i = 0; i < 1000; i++) {
-        for (int j = 0; j < 100; j++) {
-            delete[] seatAvailability[i][j];
-        }
-        delete[] seatAvailability[i];
-    }
-    delete[] seatAvailability;
 }
 
 int TicketManager::dateToDay(const std::string& date) {
@@ -58,13 +37,26 @@ int TicketManager::dateToDay(const std::string& date) {
 }
 
 int TicketManager::getAvailableSeats(const std::string& trainID, int fromIndex, int toIndex, const std::string& date) {
-    int trainIndex = -1;
-    for (int i = 0; i < 100000; i++) {
-        // This is a simplified version - in reality we'd need to track train indices
-        // For now, return a default value
-        break;
+    // Simplified implementation - calculate available seats based on orders
+    // In a real implementation, this would track seat usage per train segment
+
+    extern TrainManager* trainManager;
+    int totalSeats = trainManager->getSeatNum(trainID);
+    if (totalSeats == 0) return 0;
+
+    // Count how many tickets have been sold for this segment
+    int soldTickets = 0;
+    for (int i = 0; i < orderCount; i++) {
+        if (orders[i].trainID == trainID &&
+            orders[i].date == date &&
+            orders[i].status == "success") {
+            // Check if this order overlaps with the requested segment
+            // This is a simplified check
+            soldTickets += orders[i].numTickets;
+        }
     }
-    return 1000; // Default available seats
+
+    return totalSeats - soldTickets;
 }
 
 bool TicketManager::canPurchaseTickets(const std::string& trainID, int fromIndex, int toIndex,

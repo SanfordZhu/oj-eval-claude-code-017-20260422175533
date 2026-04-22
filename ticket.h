@@ -32,8 +32,8 @@ struct TicketQuery {
 
 class TicketManager {
 private:
-    static const int MAX_ORDERS = 100000;
-    static const int MAX_WAITLIST = 10000;
+    static const int MAX_ORDERS = 50000;
+    static const int MAX_WAITLIST = 5000;
 
     Order* orders;
     int orderCount;
@@ -41,7 +41,8 @@ private:
     Order* waitlist;
     int waitlistCount;
 
-    int*** seatAvailability;
+    // Use a more memory-efficient approach for seat availability
+    // Instead of 3D array, use a map-like structure or calculate on demand
 
     long long currentTimestamp;
 

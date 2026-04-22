@@ -6,20 +6,27 @@
 struct Train {
     std::string trainID;
     int stationNum;
-    std::string stations[100];
+    std::string* stations;  // Dynamic allocation
     int seatNum;
-    int prices[99];
+    int* prices;            // Dynamic allocation
     int startTimeHour;
     int startTimeMin;
-    int travelTimes[99];
-    int stopoverTimes[98];
+    int* travelTimes;       // Dynamic allocation
+    int* stopoverTimes;     // Dynamic allocation
     std::string saleDateStart;
     std::string saleDateEnd;
     char type;
     bool isReleased;
 
     Train() : stationNum(0), seatNum(0), startTimeHour(0), startTimeMin(0),
-              type('G'), isReleased(false) {}
+              type('G'), isReleased(false), stations(nullptr), prices(nullptr),
+              travelTimes(nullptr), stopoverTimes(nullptr) {}
+    ~Train() {
+        delete[] stations;
+        delete[] prices;
+        delete[] travelTimes;
+        delete[] stopoverTimes;
+    }
 };
 
 struct StationTime {
@@ -36,8 +43,8 @@ struct StationTime {
 
 class TrainManager {
 private:
-    static const int MAX_TRAINS = 10000;
-    static const int HASH_SIZE = 20011;
+    static const int MAX_TRAINS = 5000;
+    static const int HASH_SIZE = 10007;
 
     Train* trains;
     int trainCount;
