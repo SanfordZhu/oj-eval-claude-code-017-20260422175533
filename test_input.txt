@@ -1,0 +1,6 @@
+add_user -u admin -p password123 -n 管理员 -m admin@example.com -g 10
+add_user -c admin -u user1 -p pass123 -n 张三 -m user1@example.com -g 5
+login -u admin -p password123
+query_profile -c admin -u admin
+logout -u admin
+exit
