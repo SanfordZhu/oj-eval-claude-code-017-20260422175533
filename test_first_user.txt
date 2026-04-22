@@ -1,0 +1,3 @@
+add_user -u admin -p pass123 -n 管理员 -m admin@test.com -g 10
+query_profile -c admin -u admin
+exit
